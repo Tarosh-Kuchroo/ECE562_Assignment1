@@ -4,23 +4,6 @@ import numpy as np
 
 
 def affine_forward(x, w, b):
-    """
-    Computes the forward pass for an affine (fully-connected) layer.
-
-    The input x has shape (N, d_1, ..., d_k) and contains a minibatch of N
-    examples, where each example x[i] has shape (d_1, ..., d_k). We will
-    reshape each input into a vector of dimension D = d_1 * ... * d_k, and
-    then transform it to an output vector of dimension M.
-
-    Inputs:
-    - x: A numpy array containing input data, of shape (N, d_1, ..., d_k)
-    - w: A numpy array of weights, of shape (D, M)
-    - b: A numpy array of biases, of shape (M,)
-
-    Returns a tuple of:
-    - out: output, of shape (N, M)
-    - cache: (x, w, b)
-    """
     N = x.shape[0] #Extracts the number of samples in the batch basically
     x_row = x.reshape(N, -1) #Makes the sample in a row vector
     out = x_row.dot(w) + b #Does the matrix mult + bias 
@@ -29,87 +12,27 @@ def affine_forward(x, w, b):
 
 
 def affine_backward(dout, cache):
-    """
-    Computes the backward pass for an affine layer.
-
-    Inputs:
-    - dout: Upstream derivative, of shape (N, M)
-    - cache: Tuple of:
-      - x: Input data, of shape (N, d_1, ... d_k)
-      - w: Weights, of shape (D, M)
-      - b: Biases, of shape (M,)
-
-    Returns a tuple of:
-    - dx: Gradient with respect to x, of shape (N, d1, ..., d_k)
-    - dw: Gradient with respect to w, of shape (D, M)
-    - db: Gradient with respect to b, of shape (M,)
-    """
     x, w, b = cache
-    dx, dw, db = None, None, None
-    ###########################################################################
-    # TODO: Implement the affine backward pass.                               #
-    ###########################################################################
-    # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
+    N = x.shape[0]
 
-    pass
-
-    # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-    ###########################################################################
-    #                             END OF YOUR CODE                            #
-    ###########################################################################
+    x_row = x.reshape(N, -1) # (N, D)
+  #gradients
+    dw = x_row.T.dot(dout) # (D, N)*(N, M)=(D, M)
+    db = np.sum(dout, axis=0) # (M,)
+    dx_row = dout.dot(w.T) # (N, M)*(M, D)=(N, D)
+    dx = dx_row.reshape(x.shape) # back to (N, d1, ..., dk)
     return dx, dw, db
 
 
 def relu_forward(x):
-    """
-    Computes the forward pass for a layer of rectified linear units (ReLUs).
-
-    Input:
-    - x: Inputs, of any shape
-
-    Returns a tuple of:
-    - out: Output, of the same shape as x
-    - cache: x
-    """
-    out = None
-    ###########################################################################
-    # TODO: Implement the ReLU forward pass.                                  #
-    ###########################################################################
-    # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-
-    pass
-
-    # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-    ###########################################################################
-    #                             END OF YOUR CODE                            #
-    ###########################################################################
-    cache = x
-    return out, cache
+  out = np.maximum(0, x)
+  cache = x
+  return out, cache
 
 
-def relu_backward(dout, cache):
-    """
-    Computes the backward pass for a layer of rectified linear units (ReLUs).
-
-    Input:
-    - dout: Upstream derivatives, of any shape
-    - cache: Input x, of same shape as dout
-
-    Returns:
-    - dx: Gradient with respect to x
-    """
-    dx, x = None, cache
-    ###########################################################################
-    # TODO: Implement the ReLU backward pass.                                 #
-    ###########################################################################
-    # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-
-    pass
-
-    # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-    ###########################################################################
-    #                             END OF YOUR CODE                            #
-    ###########################################################################
+def relu_backward(dout, cache): #basically pass gradients only though neurons that were active
+    x = cache #pre activation cache
+    dx = dout * (x > 0) 
     return dx
 
 
