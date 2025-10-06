@@ -20,7 +20,8 @@ def load_pickle(f):
 def load_CINIC10(ROOT,filename):
 
     filepath = os.path.join(ROOT, filename)
-    filedict = np.load(filepath)
+    # CINIC10 npz archives store pickled Python objects, so allow pickle loading
+    filedict = np.load(filepath, allow_pickle=True)
     
     x = filedict['x']
     y = filedict['y']

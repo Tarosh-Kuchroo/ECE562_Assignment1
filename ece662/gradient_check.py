@@ -1,6 +1,6 @@
 from __future__ import print_function
 from builtins import range
-brew install git-lfstry:
+try:
     # Prefer the backports provided by the `future` package when available
     # (some environments / kernels may not have `future` installed). If it's
     # missing, fall back to a harmless Python 3 compatible alias.
