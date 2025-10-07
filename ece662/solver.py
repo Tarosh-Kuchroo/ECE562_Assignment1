@@ -21,7 +21,7 @@ import pickle as pickle
 
 import numpy as np
 
-from ece697ls import optim
+from ece662 import optim
 
 
 class Solver(object):
